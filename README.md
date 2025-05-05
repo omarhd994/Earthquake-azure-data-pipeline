@@ -16,7 +16,7 @@ I’m building a scalable data pipeline in Azure to transform raw data into mean
 
 ---
 
-## tech Stack
+## Tech Stack
 
 - Git/ GitHub
 - Azure Databricks
