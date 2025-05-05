@@ -24,12 +24,3 @@ I’m building a scalable data pipeline in Azure to transform raw data into mean
 - Azure Data Factory
 - Azure Synapse Analytics
 
----
-
-## Structure of the Work
-
-1. **Setting Up the Azure Environment**  
-2. **Transforming Raw Data with Databricks**  
-3. **Building the Pipeline in Azure Data Factory**  
-4. **Analyzing Results with Synapse Analytics**
-
