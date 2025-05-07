@@ -1,3 +1,5 @@
+# Code before Azure Implementation
+
 from datetime import date, timedelta
 
 # Remove this before running Data Factory Pipeline
