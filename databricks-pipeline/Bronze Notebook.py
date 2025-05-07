@@ -1,4 +1,4 @@
-
+# Code before Azure Implementation
 # Mount ADLS Gen2
 # Required each time the cluster is restarted which should be only on the first notebook as they run in order
 
