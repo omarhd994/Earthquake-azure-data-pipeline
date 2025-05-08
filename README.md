@@ -73,4 +73,5 @@ Whether you're a recruiter, hiring manager, or data enthusiast, I hope this proj
 
 
 ![pipe](https://github.com/user-attachments/assets/b06ef2d5-38de-4a46-8cc6-edd39485fb01)
+![Captura de pantalla 2025-05-08 153521](https://github.com/user-attachments/assets/c9fadc95-18ab-4ecc-a5e5-5bebf4671885)
 
