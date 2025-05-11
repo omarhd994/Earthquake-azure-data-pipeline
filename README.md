@@ -12,19 +12,23 @@ I followed the **Medallion Architecture** approach with three key layers:
 
 ### 🔹 Bronze Layer
 - **Raw ingestion layer**
-- Stores data as-is from the **USGS Earthquake API** (GeoJSON format) in **Parquet** format.
+- Stores data as-is from the **USGS Earthquake API** in **GeoJSON** format.
 - Keeps raw historical records for traceability.
-- Ingestion is orchestrated in **batch mode** using **Azure Data Factory**, which is scheduled to pull the latest earthquake data from the API at regular intervals.
+- Data is fetched from the API endpoint:  
+  `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=...`
+- Ingestion is orchestrated in **batch mode** using **Azure Data Factory**, which is scheduled to run **daily at midnight**.
+- Each run performs an **incremental load**, extracting only earthquake data from the **last 24 hours**, ensuring freshness while optimizing performance and storage.
 
 ### 🔸 Silver Layer
 - **Cleansed and transformed layer**
-- Handles nulls, removes duplicates, and standardizes the dataset.
-- Prepares the data for analytical processing.
+- Handles null values, removes duplicates, and applies standard formatting.
+- Converts semi-structured fields into a normalized format.
 
 ### 🟡 Gold Layer
 - **Business-ready layer**
-- Data is enriched with additional attributes (e.g., country codes) and aggregated.
-- Designed for fast querying, dashboarding, and reporting.
+- Data is enriched and aggregated to provide more clarity and usability.
+- Using **Databricks with PySpark**, the pipeline applies the **`reverse_geocoder`** Python library to detect the **country code** for each earthquake based on its latitude and longitude.
+- This step makes the data more interpretable for downstream analytics by mapping seismic events to countries.
 
 ---
 
@@ -36,23 +40,28 @@ This project includes:
   Built around Medallion Architecture: Bronze → Silver → Gold.
 
 - **ELT Pipelines**  
-  Ingestion is done in **batch** via **Azure Data Factory**, pulling data from the **USGS Earthquake API** on a defined schedule. Transformation is handled in **Azure Databricks** using PySpark.
+  - Ingestion is done in **batch** via **Azure Data Factory**, pulling data from the [USGS Earthquake API](https://earthquake.usgs.gov/fdsnws/event/1/) on a **daily schedule**.
+  - The pipeline is configured to extract data incrementally for the **last 24 hours** only, optimizing data movement and cost.
+  - Transformation and enrichment are handled in **Azure Databricks** using **PySpark**, including country identification with `reverse_geocoder`.
 
 - **Data Modeling & Storage**  
-  Processed data is stored in **Azure Data Lake Storage Gen2** and modeled in **Azure Synapse Analytics** for advanced querying.
+  - All data is stored in **Azure Data Lake Storage Gen2** in **Parquet** format.
+  - Data is then modeled in **Azure Synapse Analytics** for efficient querying and integration with reporting tools.
 
 - **Automation & Scheduling**  
-  Data ingestion is fully automated and scheduled to run periodically via **ADF**, ensuring continuous integration of fresh data into the pipeline.
+  - The **ADF pipeline** is fully automated and scheduled to run **every midnight**.
+  - Ensures continuous integration of up-to-date earthquake data into the pipeline.
 
 - **Reporting & Visualization**  
-  The refined, gold-layer data is connected to **Power BI dashboards** for real-time stakeholder insights and reporting.
+  - Final enriched data is exposed via **Power BI dashboards**.
+  - Stakeholders can track global seismic activity and trends in near-real time.
 
 ---
 
 ## 🛠️ Tech Stack
 
 - Azure Data Factory  
-- Azure Databricks (PySpark)  
+- Azure Databricks (PySpark + reverse_geocoder)  
 - Azure Data Lake Storage Gen2  
 - Azure Synapse Analytics  
 - Power BI  
